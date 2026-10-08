@@ -1,0 +1,27 @@
+# Pi-hole + DNS-over-HTTPS resolver
+#
+# Two services on a dedicated container (CT105).
+# Credentials are supplied via .env — copy .env.example to .env and fill in values.
+
+services:
+  pihole:
+    image: pihole/pihole:latest
+    container_name: pihole
+    network_mode: host
+    environment:
+      TZ: ${TZ}
+      FTLCONF_webserver_api_password: ${PIHOLE_PASSWORD}
+      FTLCONF_dns_upstreams: "127.0.0.1#5053"
+      FTLCONF_dns_listeningMode: "ALL"
+    volumes:
+      - ./etc-pihole:/etc/pihole
+      - ./etc-dnsmasq.d:/etc/dnsmasq.d
+    restart: unless-stopped
+
+  cloudflared:
+    # Pinned: the "latest" tag lacks proxy-dns mode.
+    image: cloudflare/cloudflared:2026.1.2
+    container_name: cloudflared
+    network_mode: host
+    command: proxy-dns --port 5053 --upstream https://1.1.1.1/dns-query
+    restart: unless-stopped

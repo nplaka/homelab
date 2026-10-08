@@ -1,0 +1,53 @@
+# .gitignore
+
+# Secrets and environment files
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*.p12
+*.crt
+*.conf
+*.token
+secrets/
+**/secrets/
+
+# WireGuard / VPN configs
+wg*.conf
+*.conf.txt
+wg-configs/
+
+# Backups and archives
+*.tar
+*.tar.gz
+*.tar.zst
+*.tar.bz2
+*.zip
+*.gz
+*.bak
+*.bak-*
+*.old
+*_BACKUP*/
+backups/
+
+# Logs
+*.log
+logs/
+
+# OS / editor noise
+.DS_Store
+Thumbs.db
+*.swp
+*~
+.idea/
+.vscode/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Local overrides
+*.local

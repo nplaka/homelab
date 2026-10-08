@@ -1,0 +1,18 @@
+# Backrest — restic backup web UI
+# Credentials are supplied via .env — copy .env.example to .env and fill in values.
+
+services:
+  backrest:
+    image: garethgeorge/backrest:latest
+    container_name: backrest
+    ports:
+      - "9898:9898"
+    environment:
+      BACKREST_DATA: /data
+      BACKREST_CONFIG: /config/config.json
+      XDG_CACHE_HOME: /cache
+    volumes:
+      - ./data:/data
+      - ./config:/config
+      - ./cache:/cache
+    restart: unless-stopped

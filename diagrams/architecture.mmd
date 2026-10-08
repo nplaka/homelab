@@ -1,0 +1,28 @@
+flowchart TB
+    Internet([Internet])
+
+    subgraph LAN["LAN 192.0.2.0/24"]
+        FW["Router / Firewall<br/>192.0.2.1"]
+
+        subgraph PVE["Proxmox host — pve (192.0.2.10)"]
+            CT100["CT100 — orion<br/>192.0.2.11<br/>Automation / agent"]
+            CT101["CT101 — docker-core<br/>192.0.2.12<br/>Nextcloud + Immich"]
+            CT102["CT102 — docker-projects<br/>192.0.2.13<br/>Docker stack"]
+            CT105["CT105 — pihole-dns<br/>192.0.2.15<br/>Pi-hole + DoH"]
+        end
+
+        subgraph VPGW["CT104 — vpn-gateway (192.0.2.14)"]
+            WG["WireGuard wg1<br/>10.20.0.1/24"]
+        end
+    end
+
+    Clients["Remote clients<br/>10.20.0.0/24"]
+
+    Internet --> FW
+    FW --> PVE
+    FW --> VPGW
+    CT101 --- CT102
+    CT102 --> CT105
+    Clients -->|"UDP 51821"| WG
+    WG -->|"encrypted exit"| Internet
+    WG -->|"LAN access"| PVE

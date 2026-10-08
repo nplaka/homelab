@@ -1,0 +1,45 @@
+# Nextcloud + MariaDB + Redis
+# Credentials are supplied via .env — copy .env.example to .env and fill in values.
+
+services:
+  nextcloud:
+    # Pinned: "latest" performs automatic schema upgrades on start.
+    image: nextcloud:35
+    container_name: nextcloud-app
+    ports:
+      - "8080:80"
+    environment:
+      MYSQL_HOST: ${DB_HOST}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+      REDIS_HOST: redis
+      NEXTCLOUD_ADMIN_USER: ${NC_ADMIN_USER}
+      NEXTCLOUD_ADMIN_PASSWORD: ${NC_ADMIN_PASSWORD}
+    volumes:
+      - nextcloud-data:/var/www/html
+    depends_on:
+      - nextcloud-db
+      - nextcloud-redis
+    restart: unless-stopped
+
+  nextcloud-db:
+    image: mariadb:10.6
+    container_name: nextcloud-db
+    environment:
+      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${DB_NAME}
+      MYSQL_USER: ${DB_USER}
+      MYSQL_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - nextcloud-db-data:/var/lib/mysql
+    restart: unless-stopped
+
+  nextcloud-redis:
+    image: redis:alpine
+    container_name: nextcloud-redis
+    restart: unless-stopped
+
+volumes:
+  nextcloud-data:
+  nextcloud-db-data:

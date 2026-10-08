@@ -1,0 +1,14 @@
+# Jellyfin media server
+# No credentials required for the container itself; configured via web UI.
+
+services:
+  jellyfin:
+    image: jellyfin/jellyfin:latest
+    container_name: jellyfin
+    ports:
+      - "8096:8096"
+    volumes:
+      - ./config:/config
+      - ./cache:/cache
+      - /path/to/media:/media:ro
+    restart: unless-stopped

@@ -1,0 +1,28 @@
+flowchart TB
+    subgraph Sources["Data sources"]
+        S1["Docker project files"]
+        S2["Application configs"]
+        S3["Containers (whole system)"]
+    end
+
+    subgraph Methods["Backup methods"]
+        R["Backrest (restic)"]
+        V["Proxmox vzdump"]
+    end
+
+    subgraph Targets["Destinations"]
+        D1["Repository server-raid<br/>Disk #1"]
+        D2["Repository server-hdd320<br/>Disk #2"]
+        D3["Proxmox backup storage"]
+    end
+
+    S1 --> R
+    S2 --> R
+    S3 --> V
+
+    R --> D1
+    R --> D2
+    V --> D3
+
+    D1 -.->|"prune weekly · check monthly"| D1
+    D2 -.->|"prune weekly · check monthly"| D2

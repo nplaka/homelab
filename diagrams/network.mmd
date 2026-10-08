@@ -1,0 +1,10 @@
+flowchart LR
+    Internet([Internet]) --- RTR["Router / Firewall<br/>192.0.2.1"]
+    RTR --- SW{{"LAN 192.0.2.0/24"}}
+    SW --- PVE["Proxmox host<br/>192.0.2.10"]
+    SW --- CT1["CT100 orion<br/>192.0.2.11"]
+    SW --- CT2["CT101 docker-core<br/>192.0.2.12"]
+    SW --- CT3["CT102 docker-projects<br/>192.0.2.13"]
+    SW --- CT5["CT105 pihole-dns<br/>192.0.2.15"]
+    SW --- GW["CT104 vpn-gateway<br/>192.0.2.14"]
+    GW ---|"wg1 10.20.0.1/24"| REMOTE["Remote clients<br/>10.20.0.2-10.20.0.6"]
